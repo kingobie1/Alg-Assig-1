@@ -10,7 +10,10 @@ and greedy seach functions.
 # import the actual functions from Functions.py:
 from Functions import *
 from collections import namedtuple
+import sys
 
+#File name that we will run our program with
+fileName = sys.argv[1]
 #This variable tells us whetehr we should use a greedy or iterative approach
 method = ""
 #This is our bas number we will operate on
@@ -25,8 +28,8 @@ ArrayOfOperations = []
 OperationStruct = namedtuple("OperationStruct", 'operation value')
 iterativeDeepening(ArrayOfOperations)
 
-#Open our file and start reading it with takes care of closing
-with open("test_input1.txt") as file:
+#Open our file and start reading it 'with' takes care of closing
+with open(fileName) as file:
     method = file.readline().strip()
     base = file.readline().strip()
     target = file.readline().strip()
