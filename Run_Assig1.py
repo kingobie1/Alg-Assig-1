@@ -1,6 +1,6 @@
 """
 Obatola Seward-Evans
-CS 4241 Assignment 1
+CS 4341 Assignment 1
 September 9th, 2016
 
 """
