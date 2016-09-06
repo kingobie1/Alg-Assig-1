@@ -2,6 +2,8 @@ CS4341
 Assignment #1 
 Due date: 9/9/16 @ 11:59 p.m.
 
+# Algorithms Assignment 1
+
 For this assignment you will learn about basic search techniques. You will use iterative deepening and greedy (best­first) search on a set of arithmetic operators. Your goal is to start with an initial number, and use the smallest number of arithmetic operations to reach the target numeric value. In the event the value is unreachable, your program should get as close as possible to the target value in the provided time. For this assignment, “close” is measured as the absolute difference between your program’s answer and the target value.
 
 ## Reading in the search problem
@@ -11,7 +13,7 @@ Your program should accept a command­line argument specifying the name of the f
 - A starting numeric value 
 - A target numeric value 
 - The number of seconds your program has to find the best answer possible. Your program must terminate and output an answer in the time allocated. 
-- A series of mathematical operators, followed by a numeric value ○ +, ­, /, *, ^
+- A series of mathematical operators, followed by a numeric value ○ +, ­, /, \*, ^
 
 As an example, consider a file with the following contents: 
 iterative 
@@ -21,7 +23,7 @@ iterative
 +3 ­
 -1 
 /2 
-*5
+\*5
 ^2
 
 For this problem, your program should use iterative deepening, start with the value of 4, and its goal is to reach a value of 11 within 2.5 seconds. Operators it is permitted to apply are adding 3 to the current value, subtracting 1, dividing by 2, multiplying by 5, or squaring the number. All arithmetic operations have the same (unit) cost.
