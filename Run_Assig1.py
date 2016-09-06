@@ -22,7 +22,7 @@ time = 0
 # Array of Operation holds all of the possible OperationStructs
 ArrayOfOperations = []
 # Operation structs hold individual tuples such as (+, 2) or (/, 3)
-OperationStruct = namedtuple('operation','value')
+OperationStruct = namedtuple("OperationStruct", 'operation value')
 iterativeDeepening(ArrayOfOperations)
 
 #Open our file and start reading it with takes care of closing
@@ -33,9 +33,10 @@ with open("test_input1.txt") as file:
     time = file.readline().strip()
 
     print "method:" + method
-    print base
-    print target
-    print time
+    print "base:" + base
+    print "target:" + target
+    print "time:" + time
 
     for line in file:
-    	print line
+    	ArrayOfOperations.append(OperationStruct(operation = line[0], value = line[1]))
+    print ArrayOfOperations
