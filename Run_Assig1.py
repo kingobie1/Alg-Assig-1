@@ -8,7 +8,7 @@ This file requires Functions.py which holds the iterative deepending
 and greedy seach functions.
 """
 # import the actual functions from Functions.py:
-from Functions import *
+import Functions
 from collections import namedtuple
 import sys
 
@@ -26,7 +26,7 @@ time = 0
 ArrayOfOperations = []
 # Operation structs hold individual tuples such as (+, 2) or (/, 3)
 OperationStruct = namedtuple("OperationStruct", 'operation value')
-iterativeDeepening(ArrayOfOperations)
+Functions.iterativeDeepening(ArrayOfOperations)
 
 #Open our file and start reading it 'with' takes care of closing
 with open(fileName) as file:
