@@ -7,15 +7,16 @@ This file holds the functions used in Run_Assig1.py
 """
 
 # - - - "ITERATIVE DEEPENING" FUNCTION - - -
+#This our function for doing an Iterative Depth First Search
+#(inspired by https://en.wikipedia.org/wiki/Iterative_deepening_depth-first_search)
 def iterativeDeepening(start, operations, goal):
-    print ("I will do iterative deepening!")
     depth = 0
     solution = None
     while solution == None:
-        visited = [] # <-- Empty List
-        solution = depthLimited(start, operations, goal, depth, visited)
+        path = [] # <-- Empty List
+        solution = depthLimited(start, operations, goal, depth, path)
         depth = depth + 1
-    return solution
+    return solution, len(path), depth
 
 def operateOn(start, operation):
 	if operation.operator == "+":
@@ -29,18 +30,19 @@ def operateOn(start, operation):
 	elif operation.operator == "^":
 		return start ** operation.value
 
-def depthLimited(start, operations, goal, depth, visited):
+def depthLimited(start, operations, goal, depth, path):
     if depth == 0 and start == goal:
         return start
     elif depth > 0:
         for nextOp in operations:
         	child = operateOn(start, nextOp)
-        	visited = depthLimited(child, operations, goal, depth-1, visited)
-        	if visited != None:
-				return visited
+        	path.append(start)
+        	found = depthLimited(child, operations, goal, depth-1, path)
+        	if found != None:
+				return found
 	return None
 
 # - - - "GREEDY SEARCH" FUNCTION - - -
-def greedySearch(listOfOperations):
+def greedySearch(start, operations, goal):
     print ("I will do a greedy Search!")
     return
