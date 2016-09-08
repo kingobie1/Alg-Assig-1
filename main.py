@@ -51,4 +51,10 @@ with open(fileName) as file:
     	ArrayOfOperations.append(OperationStruct(operation = line[0], value = line.split()))
     # print ArrayOfOperations
 
-#Functions.iterativeDeepening(int(base), ArrayOfOperations, int(target))
+if method == "iterative":
+    print "running iterative"
+    # Functions.iterativeDeepening(int(base), ArrayOfOperations, int(target))
+else:
+    print "running greedy"
+    # Functions.greedySearch(base, ArrayOfOperations, target)
+
