@@ -48,8 +48,10 @@ with open(fileName) as file:
     for line in file:
         # gets the operator and number (any number of digits) from the line
         # creates an OperationStruct from it and adds it to ArrayOfOperations
-    	ArrayOfOperations.append(OperationStruct(operator = line[0], value = float(line.split()[1])))
+    	ArrayOfOperations.append(OperationStruct(operator = line[0], value = int(line.split()[1])))
     # print ArrayOfOperations
 
-path, depth = Functions.iterativeDeepening(int(base), ArrayOfOperations, int(target))
-print path
+path = Functions.iterativeDeepening(int(base), ArrayOfOperations, int(target))
+for op in path[::-1]:
+    if op[1] != None:
+        print str(op[0]) + " " + str(op[1].operator) + " " + str(op[1].value) + " = " + str(op[2])
