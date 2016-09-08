@@ -33,8 +33,6 @@ ArrayOfOperations = []
 # Operation structs hold individual tuples such as (+, 2) or (/, 3)
 OperationStruct = namedtuple("OperationStruct", 'operation value')
 
-# Functions.iterativeDeepening(ArrayOfOperations)
-
 # Open our file and start reading it 'with' takes care of closing
 with open(fileName) as file:
     method = file.readline().strip()
@@ -51,4 +49,6 @@ with open(fileName) as file:
         # gets the operator and number (any number of digits) from the line
         # creates an OperationStruct from it and adds it to ArrayOfOperations
     	ArrayOfOperations.append(OperationStruct(operation = line[0], value = line.split()))
-    print ArrayOfOperations
+    # print ArrayOfOperations
+
+#Functions.iterativeDeepening(int(base), ArrayOfOperations, int(target))
