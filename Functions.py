@@ -19,15 +19,15 @@ def iterativeDeepening(start, operations, goal):
 
 def operateOn(start, operation):
 	if operation.operator == "+":
-		return start + operation.value
+		return int(start + operation.value)
 	elif operation.operator == "-":
-		return start - operation.value
+		return int(start - operation.value)
 	elif operation.operator == "*":
-		return start * operation.value
+		return int(start * operation.value)
 	elif operation.operator == "/":
-		return start / operation.value
+		return int(start / operation.value)
 	elif operation.operator == "^":
-		return start ** operation.value
+		return int(start ** operation.value)
 
 def depthLimited(start, operations, goal, depth):
     if depth == 0 and start == goal:
