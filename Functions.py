@@ -80,11 +80,22 @@ def depthLimited(start, operations, goal, depth):
 				path = found
 		return path
 
-# - - - "GREEDY SEARCH" FUNCTION - - -
-def greedySearch(start, operations, goal):
-	print ("I will do a greedy Search!")
 
-	print start
-	print goal
-	
-	return
+def greedySearch(start, operations, goal, arrayLength):
+    print ("I will do a greedy Search!")
+    num = 0
+    count = 0
+    smallestSum = start
+
+    while operations:
+        for num in range(0, arrayLength):
+            operateOn(smallestSum, operations[num][1][0])
+            # del operations[0]   
+            count += 1
+
+    
+    return
+
+# produces the absolute difference between the value and the goal
+def difference (value, goal):
+    return abs(value - goal)
