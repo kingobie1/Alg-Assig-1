@@ -83,18 +83,37 @@ def depthLimited(start, operations, goal, depth):
 
 def greedySearch(start, operations, goal, arrayLength):
     print ("I will do a greedy Search!")
-    num = 0
-    count = 0
-    smallestSum = start
+
+    bestSum = start
+    length = arrayLength
+    value = start
+    indexOfBestSum = None
+    sum = 0
 
     while operations:
-        for num in range(0, arrayLength):
-            operateOn(smallestSum, operations[num][1][0])
-            # del operations[0]   
-            count += 1
+        num = 0
+        for num in range(0, length - 1):
+            sum = operateOn(bestSum, operations[num])
+            if difference(sum, goal) < difference(bestSum, goal):
+                bestSum = sum
+                indexOfBestSum = num
+            num += 1
 
+        if indexOfBestSum != None:
+            value = bestSum
+            del operations[indexOfBestSum]
+            length -= 1
+
+        else:
+            operations = []
+
+        num += 1
+
+
+    print bestSum
+    return bestSum
     
-    return
+    # return
 
 # produces the absolute difference between the value and the goal
 def difference (value, goal):
