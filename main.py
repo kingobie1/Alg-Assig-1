@@ -46,17 +46,18 @@ with open(fileName) as file:
     print "time:" + time
 
     for line in file:
-        arrayLength += 1
         # gets the operator and number (any number of digits) from the line
         # creates an OperationStruct from it and adds it to ArrayOfOperations
-    	ArrayOfOperations.append(OperationStruct(operator = line[0], value = float(line.split()[1])))
+    	ArrayOfOperations.append(OperationStruct(operator = line[0], value = int(line.split()[1])))
     # print ArrayOfOperations
 
-if method == "iterative":
-    print "running iterative"
-    path, depth = Functions.iterativeDeepening(int(base), ArrayOfOperations, int(target))
-    print path
-else:
-    print "running greedy"
-    Functions.greedySearch(int(base), ArrayOfOperations, int(target), arrayLength)
+path, elapsed = Functions.iterativeDeepening(int(base), ArrayOfOperations, int(target), float(time))
 
+print ''
+print "Error: " + str(path[0][0])
+print "Number of steps required: " + str(len(path) - 1)
+print "Search required: " + str(elapsed) + " seconds"
+
+for op in path[::-1]:
+    if op[1] != None:
+        print str(op[0]) + " " + str(op[1].operator) + " " + str(op[1].value) + " = " + str(op[2])
