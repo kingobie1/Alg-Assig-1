@@ -44,4 +44,8 @@ def depthLimited(start, operations, goal, depth):
 # - - - "GREEDY SEARCH" FUNCTION - - -
 def greedySearch(start, operations, goal):
     print ("I will do a greedy Search!")
+
+    print start
+    print goal
+    
     return
