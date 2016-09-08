@@ -35,6 +35,7 @@ OperationStruct = namedtuple("OperationStruct", 'operator value')
 
 # Open our file and start reading it 'with' takes care of closing
 with open(fileName) as file:
+    arrayLength = 0
     method = file.readline().strip()
     base = file.readline().strip()
     target = file.readline().strip()
@@ -46,12 +47,18 @@ with open(fileName) as file:
     print "time:" + time
 
     for line in file:
+        arrayLength += 1
         # gets the operator and number (any number of digits) from the line
         # creates an OperationStruct from it and adds it to ArrayOfOperations
     	ArrayOfOperations.append(OperationStruct(operator = line[0], value = int(line.split()[1])))
     # print ArrayOfOperations
 
-path, elapsed = Functions.iterativeDeepening(int(base), ArrayOfOperations, int(target), float(time))
+if method == "iterative":
+    print "running iterative"
+    path, elapsed = Functions.iterativeDeepening(int(base), ArrayOfOperations, int(target), float(time))
+else:
+    print "running greedy"
+    Functions.greedySearch(int(base), ArrayOfOperations, int(target), arrayLength)
 
 print ''
 print "Error: " + str(path[0][0])
