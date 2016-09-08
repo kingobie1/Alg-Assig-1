@@ -11,34 +11,33 @@ This file holds the functions used in Run_Assig1.py
 #(inspired by https://en.wikipedia.org/wiki/Iterative_deepening_depth-first_search)
 def iterativeDeepening(start, operations, goal):
     depth = 0
-    solution = None
-    while solution == None:
-        path = [] # <-- Empty List
-        solution = depthLimited(start, operations, goal, depth, path)
+    solution = []
+    while solution == None or len(solution) == 0:
+        solution = depthLimited(start, operations, goal, depth)
         depth = depth + 1
-    return solution, len(path), depth
+    return solution, depth
 
 def operateOn(start, operation):
 	if operation.operator == "+":
-		return start + operation.value
+		return int(start + operation.value)
 	elif operation.operator == "-":
-		return start - operation.value
+		return int(start - operation.value)
 	elif operation.operator == "*":
-		return start * operation.value
+		return int(start * operation.value)
 	elif operation.operator == "/":
-		return start / operation.value
+		return int(start / operation.value)
 	elif operation.operator == "^":
-		return start ** operation.value
+		return int(start ** operation.value)
 
-def depthLimited(start, operations, goal, depth, path):
+def depthLimited(start, operations, goal, depth):
     if depth == 0 and start == goal:
-        return start
+        return [start]
     elif depth > 0:
         for nextOp in operations:
         	child = operateOn(start, nextOp)
-        	path.append(start)
-        	found = depthLimited(child, operations, goal, depth-1, path)
-        	if found != None:
+        	found = depthLimited(child, operations, goal, depth-1)
+        	if found != None and len(found) > 0:
+				found.append(start)
 				return found
 	return None
 
