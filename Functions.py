@@ -30,18 +30,6 @@ def operateOn(start, operation):
     elif operation.operator == "^":
         return start ** operation.value
 
-# def depthLimited(start, operations, goal, depth, path):
-#     print "start:" + str(start)
-
-#     if depth == 0 and start == goal:
-#         return start
-#     elif depth > 0:
-#         for nextOp in operations:
-#             child = operateOn(start, nextOp)
-#             found = depthLimited(child, operations, goal, depth-1, path)
-#             if found != None:
-#                 return found
-#     return None
 def depthLimited(start, operations, goal, depth, path):
     print "start:" + str(start)
 
@@ -56,34 +44,28 @@ def depthLimited(start, operations, goal, depth, path):
     return None
 
 def ida_star(start, operations, goal):
-    depth = 0
-    bound = abs(goal - start)
+    thresh = 0
     solution = None
     while solution == None:
-        solution = search(start, depth, operations, goal, 0)
-        if solution == goal:
-            return solution
-        depth = depth + 1
-        bound = solution
+        solution = threshLimited(start, operations, goal, 0, thresh)
+        thresh = thresh + 1
     return solution
- 
-def search(start, cost, operations, goal, bound):
-    h = abs(goal - start)
-    f = cost + h
-    if f > bound:
-       return None
+
+def threshLimited(start, operations, goal, cost, thresh):
+    print "start:" + str(start)
+    f = cost + 0
+    if f > thresh:
+        return None
     if start == goal:
-        return goal
-    min = sys.maxint
-    for nextOp in operations:
-        child = operateOn(start, nextOp)
-        found = search(child, cost + 1, operations, goal, bound)
-        print "Found:" + found
-        if found == goal:
-             return goal
-        if found < min:
-            min = found
-    return min
+        return start
+    elif f >= 0:
+        for nextOp in operations:
+            child = operateOn(start, nextOp)
+            found = threshLimited(child, operations, goal, cost + 1, thresh)
+            if found != None:
+                return found
+    return None
+
 
 # - - - "GREEDY SEARCH" FUNCTION - - -
 def greedySearch(start, operations, goal):
