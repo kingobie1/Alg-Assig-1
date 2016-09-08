@@ -51,7 +51,13 @@ with open(fileName) as file:
     	ArrayOfOperations.append(OperationStruct(operator = line[0], value = int(line.split()[1])))
     # print ArrayOfOperations
 
-path = Functions.iterativeDeepening(int(base), ArrayOfOperations, int(target))
+path, elapsed = Functions.iterativeDeepening(int(base), ArrayOfOperations, int(target), float(time))
+
+print ''
+print "Error: " + str(path[0][0])
+print "Number of steps required: " + str(len(path) - 1)
+print "Search required: " + str(elapsed) + " seconds"
+
 for op in path[::-1]:
     if op[1] != None:
         print str(op[0]) + " " + str(op[1].operator) + " " + str(op[1].value) + " = " + str(op[2])
