@@ -5,15 +5,13 @@ September 9th, 2016
 
 This file holds the functions used in Main.py
 """
-import sys
-
-
 # Limit execution time from StackOverflow
 # http://stackoverflow.com/questions/366682/how-to-limit-execution-time-of-a-function-call-in-python
 from __future__ import with_statement
 import signal
 from contextlib import contextmanager
 import time
+import sys
 
 class TimeoutException(Exception): pass
 
@@ -88,30 +86,6 @@ def depthLimited(start, operations, goal, depth):
 				path = found
 		return path
 
-#inspired by http://webdocs.cs.ualberta.ca/~jonathan/PREVIOUS/Courses/657/Notes/10.Single-agentSearch.pdf
-def ida_star(start, operations, goal):
-    thresh = 0
-    solution = None
-    while solution == None:
-        solution = threshLimited(start, operations, goal, 0, thresh)
-        thresh = thresh + 1
-    return solution
-
-def threshLimited(start, operations, goal, cost, thresh):
-    print "start:" + str(start)
-    f = cost + 0
-    if f > thresh:
-        return None
-    if start == goal:
-        return start
-    elif f >= 0:
-        for nextOp in operations:
-            child = operateOn(start, nextOp)
-            found = threshLimited(child, operations, goal, cost + 1, thresh)
-            if found != None:
-                return found
-    return None
-
 # - - - "GREEDY SEARCH" FUNCTION - - -
 def greedySearch(start, operations, goal, max_exec):
     bestSum = start
@@ -121,28 +95,28 @@ def greedySearch(start, operations, goal, max_exec):
     init_time = time.time()
     try:
         with max_time(max_exec):
-            while difference(bestSum, goal) > 0:
+            while diff(bestSum, goal) > 0:
                 count += 1
                 result = None
                 extendPath = None
                 for nextOp in operations:
 
                     temp = operateOn(bestSum, nextOp)
-                    if result == None or difference(temp, goal) < difference(result, goal):
+                    if result == None or diff(temp, goal) < diff(result, goal):
                         result = temp
                         extendPath = (bestSum, nextOp, temp)
-                if difference(result, goal) < difference(bestSum, goal):
+                if diff(result, goal) < diff(bestSum, goal):
                     bestSum = result
                     path.append(extendPath)
 
-                if difference(bestSum, goal) == 0:
+                if diff(bestSum, goal) == 0:
                     return path, (time.time() - init_time), count * len(operations), count
 
     except TimeoutException:
         return path, (time.time() - init_time), count * len(operations), count
 
-# produces the absolute difference between the value and the goal
-def difference (value, goal):
+# produces the absolute diff between the value and the goal
+def diff(value, goal):
     return abs(value - goal)
 
 
