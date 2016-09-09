@@ -11,7 +11,6 @@ from __future__ import with_statement
 import signal
 from contextlib import contextmanager
 import time
-import sys
 
 class TimeoutException(Exception): pass
 
