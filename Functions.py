@@ -6,42 +6,87 @@ September 9th, 2016
 This file holds the functions used in Main.py
 """
 import sys
+
+
+# Limit execution time from StackOverflow
+# http://stackoverflow.com/questions/366682/how-to-limit-execution-time-of-a-function-call-in-python
+from __future__ import with_statement
+import signal
+from contextlib import contextmanager
+import time
+
+class TimeoutException(Exception): pass
+
+@contextmanager
+def max_time(seconds):
+    def signal_handler(signum, frame):
+        raise TimeoutException
+    signal.signal(signal.SIGALRM, signal_handler)
+    signal.setitimer(signal.ITIMER_REAL, seconds)
+    try:
+        yield
+    finally:
+        signal.alarm(0)
+
+
 # - - - "ITERATIVE DEEPENING" FUNCTION - - -
 #This our function for doing an Iterative Depth First Search
 #(inspired by https://en.wikipedia.org/wiki/Iterative_deepening_depth-first_search)
-def iterativeDeepening(start, operations, goal):
-    depth = 0
-    solution = None
-    while solution == None:
-        path = [] # <-- Empty List
-        solution = depthLimited(start, operations, goal, depth, path)
-        depth = depth + 1
-    return solution
+def iterativeDeepening(start, operations, goal, max_exec):
+	depth = 0
+	solution = []
+	best = None
+
+	init_time = time.time()
+	try:
+	    with max_time(max_exec):
+	        while best == None or best > 0:
+				temp = depthLimited(start, operations, goal, depth)
+
+				if best == None or temp[0][0] < best:
+					best = temp[0][0]
+					solution = temp
+
+				if best == 0:
+					return solution[1::], (time.time() - init_time), expanded_nodes(depth, len(operations)), depth
+
+				depth = depth + 1
+	except TimeoutException:
+	    return solution[1::], (time.time() - init_time), expanded_nodes(depth, len(operations)), depth
+
+def expanded_nodes(depth, ops):
+    result = 0
+    while depth > 0:
+        result += ops ** depth
+        depth -= 1
+    return result
 
 def operateOn(start, operation):
-    if operation.operator == "+":
-        return start + operation.value
-    elif operation.operator == "-":
-        return start - operation.value
-    elif operation.operator == "*":
-        return start * operation.value
-    elif operation.operator == "/":
-        return start / operation.value
-    elif operation.operator == "^":
-        return start ** operation.value
+	if operation.operator == "+":
+		return int(start + operation.value)
+	elif operation.operator == "-":
+		return int(start - operation.value)
+	elif operation.operator == "*":
+		return int(start * operation.value)
+	elif operation.operator == "/":
+		return int(start / operation.value)
+	elif operation.operator == "^":
+		return int(start ** operation.value)
 
-def depthLimited(start, operations, goal, depth, path):
-    print "start:" + str(start)
-
-    if depth == 0 and start == goal:
-        return start
-    elif depth > 0:
-        for nextOp in operations:
-            child = operateOn(start, nextOp)
-            found = depthLimited(child, operations, goal, depth-1, path)
-            if found != None:
-                return found
-    return None
+def depthLimited(start, operations, goal, depth):
+	if depth == 0:
+		return [(abs(goal - start), None, None)]
+	elif depth > 0:
+		minimum = None
+		path = None
+		for nextOp in operations:
+			child = operateOn(start, nextOp)
+			found = depthLimited(child, operations, goal, depth-1)
+			if minimum == None or found[0][0] < minimum:
+				minimum = found[0][0]
+				found.append((start, nextOp, child))
+				path = found
+		return path
 
 #inspired by http://webdocs.cs.ualberta.ca/~jonathan/PREVIOUS/Courses/657/Notes/10.Single-agentSearch.pdf
 def ida_star(start, operations, goal):
@@ -68,6 +113,40 @@ def threshLimited(start, operations, goal, cost, thresh):
     return None
 
 # - - - "GREEDY SEARCH" FUNCTION - - -
-def greedySearch(start, operations, goal):
-    print ("I will do a greedy Search!")
-    return
+def greedySearch(start, operations, goal, max_exec):
+    bestSum = start
+    path = []
+    count = 0
+
+    init_time = time.time()
+    try:
+        with max_time(max_exec):
+            while difference(bestSum, goal) > 0:
+                count += 1
+                result = None
+                extendPath = None
+                for nextOp in operations:
+
+                    temp = operateOn(bestSum, nextOp)
+                    if result == None or difference(temp, goal) < difference(result, goal):
+                        result = temp
+                        extendPath = (bestSum, nextOp, temp)
+                if difference(result, goal) < difference(bestSum, goal):
+                    bestSum = result
+                    path.append(extendPath)
+
+                if difference(bestSum, goal) == 0:
+                    return path, (time.time() - init_time), count * len(operations), count
+
+    except TimeoutException:
+        return path, (time.time() - init_time), count * len(operations), count
+
+# produces the absolute difference between the value and the goal
+def difference (value, goal):
+    return abs(value - goal)
+
+
+
+
+
+

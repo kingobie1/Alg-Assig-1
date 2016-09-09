@@ -12,24 +12,30 @@ import Functions
 from collections import namedtuple
 import sys
 
-#File name that we will run our program with
+# File name that we will run our program with
 fileName = sys.argv[1]
-#This variable tells us whetehr we should use a greedy or iterative approach
+
+# This variable tells us whetehr we should use a greedy or iterative approach
 method = ""
-#This is our bas number we will operate on
+
+# This is our bas number we will operate on
 base = 0
-#This is our target number we will try to find
+
+# This is our target number we will try to find
 target = 0
-#This is the total time we are allowed to execute for
+
+# This is the total time we are allowed to execute for
 time = 0
+
 # Array of Operation holds all of the possible OperationStructs
 ArrayOfOperations = []
-# Operation structs hold individual tuples such as (+, 2) or (/, 3)
-OperationStruct = namedtuple("OperationStruct", 'operation value')
-Functions.iterativeDeepening(ArrayOfOperations)
 
-#Open our file and start reading it 'with' takes care of closing
+# Operation structs hold individual tuples such as (+, 2) or (/, 3)
+OperationStruct = namedtuple("OperationStruct", 'operator value')
+
+# Open our file and start reading it 'with' takes care of closing
 with open(fileName) as file:
+    arrayLength = 0
     method = file.readline().strip()
     base = file.readline().strip()
     target = file.readline().strip()
@@ -41,5 +47,29 @@ with open(fileName) as file:
     print "time:" + time
 
     for line in file:
-    	ArrayOfOperations.append(OperationStruct(operation = line[0], value = line[1]))
-    print ArrayOfOperations
+        arrayLength += 1
+        # gets the operator and number (any number of digits) from the line
+        # creates an OperationStruct from it and adds it to ArrayOfOperations
+    	ArrayOfOperations.append(OperationStruct(operator = line[0], value = int(line.split()[1])))
+    # print ArrayOfOperations
+
+if method == "iterative":
+    print "running iterative"
+    path, elapsed, numExpanded, maxDepth = Functions.iterativeDeepening(int(base), ArrayOfOperations, int(target), float(time))
+    path = path[::-1]
+else:
+    print "running greedy"
+    path, elapsed, numExpanded, maxDepth = Functions.greedySearch(int(base), ArrayOfOperations, int(target), float(time))
+
+for op in path:
+    if op[1] != None:
+        print str(op[0]) + " " + str(op[1].operator) + " " + str(op[1].value) + " = " + str(op[2])
+
+print ''
+print "Error: " + str(abs(int(target) - path[len(path)-1][2]))
+print "Number of steps required: " + str(len(path))
+print "Search required: " + str(elapsed) + " seconds"
+print "Nodes expanded: " + str(numExpanded)
+print "Maximum search depth: " + str(maxDepth)
+print ''
+print ''

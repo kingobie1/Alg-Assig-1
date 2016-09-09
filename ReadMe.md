@@ -20,11 +20,11 @@ iterative
 4 
 11 
 2.5 
-+3 ­
--1 
-/2 
-\*5
-^2
++ 3 ­
+- 1 
+/ 2 
+* 5
+^ 2
 
 For this problem, your program should use iterative deepening, start with the value of 4, and its goal is to reach a value of 11 within 2.5 seconds. Operators it is permitted to apply are adding 3 to the current value, subtracting 1, dividing by 2, multiplying by 5, or squaring the number. All arithmetic operations have the same (unit) cost.
 
