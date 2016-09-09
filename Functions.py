@@ -3,8 +3,9 @@ Obatola Seward-Evans, Dimitar Vouldjef, Frank Egan, Himanjal Sharma
 CS 4341 Assignment 1
 September 9th, 2016
 
-This file holds the functions used in Run_Assig1.py
+This file holds the functions used in Main.py
 """
+import sys
 
 
 # Limit execution time from StackOverflow
@@ -87,7 +88,31 @@ def depthLimited(start, operations, goal, depth):
 				path = found
 		return path
 
+#inspired by http://webdocs.cs.ualberta.ca/~jonathan/PREVIOUS/Courses/657/Notes/10.Single-agentSearch.pdf
+def ida_star(start, operations, goal):
+    thresh = 0
+    solution = None
+    while solution == None:
+        solution = threshLimited(start, operations, goal, 0, thresh)
+        thresh = thresh + 1
+    return solution
 
+def threshLimited(start, operations, goal, cost, thresh):
+    print "start:" + str(start)
+    f = cost + 0
+    if f > thresh:
+        return None
+    if start == goal:
+        return start
+    elif f >= 0:
+        for nextOp in operations:
+            child = operateOn(start, nextOp)
+            found = threshLimited(child, operations, goal, cost + 1, thresh)
+            if found != None:
+                return found
+    return None
+
+# - - - "GREEDY SEARCH" FUNCTION - - -
 def greedySearch(start, operations, goal, max_exec):
     bestSum = start
     path = []
