@@ -43,6 +43,7 @@ def depthLimited(start, operations, goal, depth, path):
                 return found
     return None
 
+#inspired by http://webdocs.cs.ualberta.ca/~jonathan/PREVIOUS/Courses/657/Notes/10.Single-agentSearch.pdf
 def ida_star(start, operations, goal):
     thresh = 0
     solution = None
@@ -65,7 +66,6 @@ def threshLimited(start, operations, goal, cost, thresh):
             if found != None:
                 return found
     return None
-
 
 # - - - "GREEDY SEARCH" FUNCTION - - -
 def greedySearch(start, operations, goal):
