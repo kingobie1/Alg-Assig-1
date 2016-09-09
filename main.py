@@ -56,15 +56,16 @@ with open(fileName) as file:
 if method == "iterative":
     print "running iterative"
     path, elapsed = Functions.iterativeDeepening(int(base), ArrayOfOperations, int(target), float(time))
+    path = path[::-1]
 else:
     print "running greedy"
-    Functions.greedySearch(int(base), ArrayOfOperations, int(target), arrayLength)
+    path, elapsed = Functions.greedySearch(int(base), ArrayOfOperations, int(target), float(time))
 
 print ''
 print "Error: " + str(path[0][0])
 print "Number of steps required: " + str(len(path) - 1)
 print "Search required: " + str(elapsed) + " seconds"
 
-for op in path[::-1]:
+for op in path:
     if op[1] != None:
         print str(op[0]) + " " + str(op[1].operator) + " " + str(op[1].value) + " = " + str(op[2])

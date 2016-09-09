@@ -81,39 +81,30 @@ def depthLimited(start, operations, goal, depth):
 		return path
 
 
-def greedySearch(start, operations, goal, arrayLength):
-    print ("I will do a greedy Search!")
-
+def greedySearch(start, operations, goal, max_exec):
     bestSum = start
-    length = arrayLength
-    value = start
-    indexOfBestSum = None
-    sum = 0
+    path = []
 
-    while operations:
-        num = 0
-        for num in range(0, length - 1):
-            sum = operateOn(bestSum, operations[num])
-            if difference(sum, goal) < difference(bestSum, goal):
-                bestSum = sum
-                indexOfBestSum = num
-            num += 1
+    init_time = time.time()
+    try:
+        with max_time(max_exec):
+            while difference(bestSum, goal) > 0:
+                result = None
+                extendPath = None
+                for nextOp in operations:
+                    temp = operateOn(bestSum, nextOp)
+                    if result == None or difference(temp, goal) < difference(result, goal):
+                        result = temp
+                        extendPath = (bestSum, nextOp, temp)
+                if difference(result, goal) < difference(bestSum, goal):
+                    bestSum = result
+                    path.append(extendPath)
 
-        if indexOfBestSum != None:
-            value = bestSum
-            del operations[indexOfBestSum]
-            length -= 1
-
-        else:
-            operations = []
-
-        num += 1
-
-
-    print bestSum
-    return bestSum
-    
-    # return
+                if difference(bestSum, goal) == 0:
+                    return path, (time.time() - init_time)
+                    
+    except TimeoutException:
+        return path, (time.time() - init_time)
 
 # produces the absolute difference between the value and the goal
 def difference (value, goal):
