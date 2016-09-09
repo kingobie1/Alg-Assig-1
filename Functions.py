@@ -47,11 +47,18 @@ def iterativeDeepening(start, operations, goal, max_exec):
 					solution = temp
 
 				if best == 0:
-					return solution, (time.time() - init_time)
+					return solution[1::], (time.time() - init_time), expanded_nodes(depth, len(operations)), depth
 
 				depth = depth + 1
 	except TimeoutException:
-	    return solution, (time.time() - init_time)
+	    return solution[1::], (time.time() - init_time), expanded_nodes(depth, len(operations)), depth
+
+def expanded_nodes(depth, ops):
+    result = 0
+    while depth > 0:
+        result += ops ** depth
+        depth -= 1
+    return result
 
 def operateOn(start, operation):
 	if operation.operator == "+":
@@ -84,14 +91,17 @@ def depthLimited(start, operations, goal, depth):
 def greedySearch(start, operations, goal, max_exec):
     bestSum = start
     path = []
+    count = 0
 
     init_time = time.time()
     try:
         with max_time(max_exec):
             while difference(bestSum, goal) > 0:
+                count += 1
                 result = None
                 extendPath = None
                 for nextOp in operations:
+
                     temp = operateOn(bestSum, nextOp)
                     if result == None or difference(temp, goal) < difference(result, goal):
                         result = temp
@@ -101,11 +111,17 @@ def greedySearch(start, operations, goal, max_exec):
                     path.append(extendPath)
 
                 if difference(bestSum, goal) == 0:
-                    return path, (time.time() - init_time)
-                    
+                    return path, (time.time() - init_time), count * len(operations), count
+
     except TimeoutException:
-        return path, (time.time() - init_time)
+        return path, (time.time() - init_time), count * len(operations), count
 
 # produces the absolute difference between the value and the goal
 def difference (value, goal):
     return abs(value - goal)
+
+
+
+
+
+
