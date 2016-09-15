@@ -1,6 +1,9 @@
 import numpy as np
 from random import randint
 
+# import the actual functions from Functions.py:
+import Functions
+
 class Organism:
 	"""docstring for Organism"""
 	gene = []
@@ -13,6 +16,7 @@ class Organism:
 	def printGene(self):
 		return self.gene
 
+<<<<<<< HEAD
 	def length(self):
 		return len(self.gene)
 
@@ -36,6 +40,25 @@ class Organism:
 
 		return (Organism(newOrganismGene1), Organism(newOrganismGene2))
 
+	def operate(self, start):
+		total = start
+
+		for index in self.gene:
+			# Todo: listOfOperations requires a masterlist of all possible operations.
+			operation = listOfOperations[index]
+			temp = Functions.operateOn(total, operation)
+			total = temp
+
+		return total
+
+	def getFitness(self, desiredGoal):
+		goal = desiredGoal
+		total = 0
+		numOps = 0
+
+		total = self.operate
+		difference = diff
+
 
 org = Organism()
 org2 = Organism()
@@ -45,4 +68,3 @@ print org2.printGene()
 new1, new2 = org.crossover(org2)
 print new1.printGene()
 print new2.printGene()
-
