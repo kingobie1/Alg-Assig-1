@@ -24,15 +24,6 @@ class Organism:
 
 		return total
 
-	def getFitness(self, desiredGoal):
-		goal = desiredGoal
-		total = 0
-		numOps = 0
-
-		total = self.operate
-		difference = diff
-
-
 			
 
 org = Organism()
