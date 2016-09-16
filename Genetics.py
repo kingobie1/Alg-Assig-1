@@ -1,13 +1,20 @@
 import numpy as np
 import random
+"""
+Obatola Seward-Evans, Dimitar Vouldjef, Frank Egan, Himanjal Sharma
+CS 4341
 
+This file contains functions and classes used for encoding problems
+as organisms that will be bred and selected fo rthat find optial solutions
+"""
 # import the actual functions from Functions.py:
 import Functions
 
 NUMOPS = 5
 
 class Organism:
-	"""docstring for Organism"""
+	"""An Organism represents an encoding of a solution within it's chromosome"""
+
 	#This is an encoding for the solution into an organism
 	#each number is an index into the operators we read in.
 	chromosome = []
@@ -15,7 +22,7 @@ class Organism:
 	# encode and mutate organisms
 	numOps = 0
 
-	def __init__(self, numOps=0, geneSeq=None):
+	def __init__(self, numOps, geneSeq=None):
 		self.numOps = numOps
 		if geneSeq == None:
 			self.chromosome = np.random.randint(5, size=10).tolist()
@@ -36,7 +43,7 @@ class Organism:
 			self.chromosome.append(op)
 		elif mType == 2:
 			#We are removing genes
-			i = random.randint(1, len(self.chromosome))
+			i = random.randint(0, len(self.chromosome)-1)
 			self.chromosome.pop(i)
 		elif mType == 3:
 			#We are modigying a gene
@@ -58,7 +65,7 @@ class Organism:
 		newOrganismGene1 = primary[0:cuttingPoint].extend(secondary[cuttingPoint:(len(secondary) - 1)])
 		newOrganismGene2 = secondary[0:cuttingPoint].extend(primary[cuttingPoint:(len(primary) - 1)])
 
-		return (Organism(geneSeq=newOrganismGene1), Organism(geneSeq=newOrganismGene2))
+		return (Organism(self.numOps, geneSeq=newOrganismGene1), Organism(self.numOps, geneSeq=newOrganismGene2))
 
 	def operate(self, start):
 		total = start
@@ -70,8 +77,6 @@ class Organism:
 			total = temp
 
 		return total
-
-
 
 org = Organism(NUMOPS)
 print org.getChromosome()
