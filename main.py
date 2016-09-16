@@ -57,6 +57,9 @@ if method == "iterative":
     print "running iterative"
     path, elapsed, numExpanded, maxDepth = Functions.iterativeDeepening(int(base), ArrayOfOperations, int(target), float(time))
     path = path[::-1]
+elif method == "genetic"
+    print "running genetic"
+    
 else:
     print "running greedy"
     path, elapsed, numExpanded, maxDepth = Functions.greedySearch(int(base), ArrayOfOperations, int(target), float(time))
