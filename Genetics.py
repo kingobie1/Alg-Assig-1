@@ -148,9 +148,21 @@ class Organism:
 			secondary = self.getChromosome()
 
 		cuttingPoint = random.randint(0, len(primary) - 1)
+		print cuttingPoint
 
-		newOrganismGene1 = primary[0:cuttingPoint].extend(secondary[cuttingPoint:(len(secondary) - 1)])
-		newOrganismGene2 = secondary[0:cuttingPoint].extend(primary[cuttingPoint:(len(primary) - 1)])
+		sectionA1 = primary[0:cuttingPoint]
+		sectionA2 = secondary[cuttingPoint:(len(secondary))]
+		sectionB1 = secondary[0:cuttingPoint]
+		sectionB2 = primary[cuttingPoint:(len(primary))]
+
+		# newOrganismGene1 = sectionA1.extend(sectionA2)
+		# newOrganismGene2 = sectionB1.extend(sectionB2)
+
+		newOrganismGene1 = sectionA1 +sectionA2
+		newOrganismGene2 = sectionB1 + sectionB2
+
+		# newOrganismGene1 = primary[0:cuttingPoint].extend(secondary[cuttingPoint:(len(secondary) - 1)])
+		# newOrganismGene2 = secondary[0:cuttingPoint].extend(primary[cuttingPoint:(len(primary) - 1)])
 
 		return (Organism(self.numOps, geneSeq=newOrganismGene1), Organism(self.numOps, geneSeq=newOrganismGene2))
 
