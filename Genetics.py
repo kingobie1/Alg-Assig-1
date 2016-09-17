@@ -24,7 +24,7 @@ class Organism:
 	def __init__(self, numOps, geneSeq=None):
 		self.numOps = numOps
 		if geneSeq == None:
-			self.chromosome = np.random.randint(5, size=10).tolist()
+			self.chromosome = np.random.randint(5, size=3).tolist()
 		else:
 			self.chromosome = geneSeq
 		
@@ -35,18 +35,17 @@ class Organism:
 		return len(self.chromosome)
 
 	def getFitness(self, base, ops, goal):
-		"""Defines the organisms fitness given the operations and starting base number.
-
+		"""
+		Defines the organisms fitness given the operations and starting base number.
 		Args:
 			base (float): The starting number we read.
 			ops (OperationStruct[]): An array of operations we read form config file.
 			goal (float): The desired goal of base after operations.
-
 		Returns:
 			How close the organism is to the desired value once decoded.
 		"""
 		# Todo: need to penalize for chromosome length
-		total = self.operate()
+		total = self.operate(base, ops)
 		return Functions.diff(total, goal)
 
 	def mutate(self):
@@ -81,7 +80,7 @@ class Organism:
 
 		return (Organism(self.numOps, geneSeq=newOrganismGene1), Organism(self.numOps, geneSeq=newOrganismGene2))
 
-	def operate(self, start, ops):
+	def operate(self, base, ops):
 		""" 
 		Goes through each encoded operation in the chromosome and applies that to the base.
 
@@ -89,15 +88,12 @@ class Organism:
 			start (int): The base number form our config file.
 			ops (OperationStruct[]): An array of operations we read from config file.
 		"""
-		total = start
+		total = base
 
 		for index in self.chromosome:
-			
-			operation = None
-			[index]
-			temp = Functions.operateOn(total, operation)
+			op = ops[index]
+			temp = Functions.operateOn(total, op)
 			total = temp
-
 		return total
 
 def populate(initSize, numOps):
@@ -106,16 +102,17 @@ def populate(initSize, numOps):
 		population.append(Organism(numOps))
 	return population
 
-def geneticSearch(start, operations, goal, max_exec):
+def geneticSearch(base, operations, goal, max_exec):
 	"""
 	Returns:
-		[int, OperationStruct, int] The solution path we took to solve,
+		[int, OperationStruct, int][] The solution path we took to solve,
 		int	Execution time,
 		int	Expanded node count,
 		int	Depth we went down to
 	"""
-	print map(lambda o: o.getChromosome(), populate(10, len(operations)))
 	return ([[4, operations[0], 11]], 0.5, 5, 3)
+
+	# print map(lambda o: o.getChromosome(), populate(10, len(operations)))
 
 # org = Organism(NUMOPS)
 # print org.getChromosome()

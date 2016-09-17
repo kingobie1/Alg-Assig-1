@@ -60,7 +60,7 @@ if method == "iterative":
     path = path[::-1]
 elif method == "genetic":
     print "running genetic"
-    path, elapsed, numExpanded, maxDepth = Genetics.geneticSearch(base, ArrayOfOperations, target, time)
+    path, elapsed, numExpanded, maxDepth = Genetics.geneticSearch(float(base), ArrayOfOperations, float(target), float(time))
 else:
     print "running greedy"
     path, elapsed, numExpanded, maxDepth = Functions.greedySearch(int(base), ArrayOfOperations, int(target), float(time))
