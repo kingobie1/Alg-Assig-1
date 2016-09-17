@@ -100,7 +100,7 @@ def getMutatedPopulation(twoFittestOrganism, populationSize):
 	# mutate each organism in population
 	for organism in mutatedPopulation:
 		organism.mutate(MUTATEPROB)
-		print organism.getChromosome()
+		# print organism.getChromosome()
 
 	# for x in xrange(0,populationSize):
 	# 	if x % 2 == 0:
@@ -163,8 +163,6 @@ class Organism:
 
 		# Do mutation
 		mType = random.randint(1, 3)
-
-		print mType
 
 		if mType == 1:
 			# We are adding a gene as an encoded index
