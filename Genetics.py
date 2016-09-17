@@ -38,11 +38,12 @@ def geneticSearch(start, operations, goal, max_exec):
 	# get the two fittest organims of out population
 	twoFittestOrganism = bestOfPopulation(start, operations, goal, population)
 
+	print 
 	print "two best organisms: "
 	print map(lambda o: o.getChromosome(), twoFittestOrganism)
-	print
+	print ".."
 	print "... crossing over ..."
-	print
+	print ".."
 
 	# TODO: crossover the two fittest organisms
 	crossedOverOrganisms = []
