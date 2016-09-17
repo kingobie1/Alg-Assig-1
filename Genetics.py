@@ -92,18 +92,21 @@ def fitnessUtility(lengthOfOrganism):
 # the best fitness from the given population
 def bestOfPopulation(start, operations, goal, population):
 	sortedPopulation =  sorted(population,key =lambda o: o.getFitness(start, operations, goal))
-	i = 1
+	i = 0
 
 	# ensure that we don't get the same organisms as the best
-	while sortedPopulation[0].getFitness(start, operations, goal) == sortedPopulation[i].getFitness(start, operations, goal) or i < 1:
-		i += 1
+	if len(sortedPopulation) > 3:
+		while sortedPopulation[0].getFitness(start, operations, goal) == sortedPopulation[i].getFitness(start, operations, goal) or i < 2:
+			i += 1
 
-	bestOF = []
-	bestOF.append(sortedPopulation[0])
-	bestOF.append(sortedPopulation[i])
+		bestOF = []
+		bestOF.append(sortedPopulation[0])
+		bestOF.append(sortedPopulation[i])
 
-	# return sortedPopulation[0:2]
-	return bestOF
+		return bestOF
+
+	return sortedPopulation[0:2]
+	# return bestOF
 
 # returns a new population of mutated organisms
 def getMutatedPopulation(twoFittestOrganism, populationSize):
