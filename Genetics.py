@@ -17,6 +17,7 @@ MUTATEPROB = 0.99
 # amount we want the program to stop at
 FITNESS_THRESHOLD = 2.0
 
+
 def geneticSearch(start, operations, goal, max_exec):
 	"""
 	Returns:
@@ -69,7 +70,6 @@ def geneticSearch(start, operations, goal, max_exec):
 		# mutate the product of the crossover (2 organisms)
 		# population = the collection of mutated organisms
 		population = getMutatedPopulation(crossedOverOrganisms, INITIAL_POPULATION_SIZE)
-		# print "mutated population: " + str(map(lambda o: o.getChromosome(), population))
 
 	# TODO: give correct return
 	return ([[4, operations[0], 11]], 0.5, 5, 3)
@@ -92,21 +92,28 @@ def fitnessUtility(lengthOfOrganism):
 # the best fitness from the given population
 def bestOfPopulation(start, operations, goal, population):
 	sortedPopulation =  sorted(population,key =lambda o: o.getFitness(start, operations, goal))
-	i = 0
+	# i = 0
 
-	# ensure that we don't get the same organisms as the best
-	if len(sortedPopulation) > 3:
-		while sortedPopulation[0].getFitness(start, operations, goal) == sortedPopulation[i].getFitness(start, operations, goal) or i < 2:
-			i += 1
+	# # ensure that we don't get the same organisms as the best
+	# if len(sortedPopulation) > 3:
+	# 	while sortedPopulation[0].getFitness(start, operations, goal) == sortedPopulation[i].getFitness(start, operations, goal) or i < 2:
+	# 		i += 1
 
+	# 	bestOF = []
+	# 	bestOF.append(sortedPopulation[0])
+	# 	bestOF.append(sortedPopulation[i])
+
+	# 	return bestOF
+
+	if sortedPopulation[0].getFitness(start, operations, goal) == sortedPopulation[1].getFitness(start, operations, goal) and len(sortedPopulation) > 2:
 		bestOF = []
 		bestOF.append(sortedPopulation[0])
-		bestOF.append(sortedPopulation[i])
-
+		bestOF.append(sortedPopulation[2])
 		return bestOF
 
 	return sortedPopulation[0:2]
 	# return bestOF
+
 
 # returns a new population of mutated organisms
 def getMutatedPopulation(twoFittestOrganism, populationSize):
@@ -120,16 +127,6 @@ def getMutatedPopulation(twoFittestOrganism, populationSize):
 	for organism in mutatedPopulation:
 		organism.mutate(MUTATEPROB)
 		# print organism.getChromosome()
-
-	# for x in xrange(0,populationSize):
-	# 	if x % 2 == 0:
-	# 		newOrganism = twoFittestOrganism[0]
-	# 	else:
-	# 		newOrganism = twoFittestOrganism[1]
-
-	# 	newOrganism.mutate(MUTATEPROB)
-	# 	print newOrganism.getChromosome()
-	# 	mutatedPopulation.append(newOrganism)
 
 	return mutatedPopulation
 
