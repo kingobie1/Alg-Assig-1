@@ -35,8 +35,14 @@ def geneticSearch(start, operations, goal, max_exec):
 	# create initial population
 	population = populate(INITIAL_POPULATION_SIZE, len(operations))
 
-	# create a new population of only the two fittest organisms
-	population = bestOfPopulation(start, operations, goal, population)
+	# get the two fittest organims of out population
+	twoFittestOrganism = bestOfPopulation(start, operations, goal, population)
+
+	# TODO: crossover the two fittest organisms
+
+	# TODO: mutate the product of the crossover (2 organisms)
+
+	# TODO: population = the collection of mutated organisms
 
 	print "doing my best"
 
