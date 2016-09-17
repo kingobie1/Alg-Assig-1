@@ -11,6 +11,7 @@ as organisms that will be bred and selected fo rthat find optial solutions
 
 NUMOPS = 5
 INITIAL_ORGANISM_SIZE = 5
+INITIAL_POPULATION_SIZE = 10
 
 def geneticSearch(start, operations, goal, max_exec):
 	"""
@@ -20,7 +21,29 @@ def geneticSearch(start, operations, goal, max_exec):
 		int	Expanded node count,
 		int	Depth we went down to
 	"""
-	print map(lambda o: o.getChromosome(), populate(10, len(operations)))
+
+	"""
+	populate
+
+	[repeat until found or time is up]
+		getFitness
+		crossover on best fitnesses
+		get collection of  crossed over organisms
+		mutate
+	"""
+
+	# create initial population
+	population = populate(INITIAL_POPULATION_SIZE, len(operations))
+
+	# create a new population of only the two fittest organisms
+	population = bestOfPopulation(start, operations, goal, population)
+
+	print "doing my best"
+
+	# while bestFitness != 0:
+
+
+	# print map(lambda o: o.getChromosome(), populate(10, len(operations)))
 	return ([[4, operations[0], 11]], 0.5, 5, 3)
 
 def populate(initSize, numOps):
@@ -33,6 +56,14 @@ def populate(initSize, numOps):
 def fitnessUtility(lengthOfOrganism):
 	# penalize longer organisms
 	return lengthOfOrganism * 0.1
+
+# function that returns a new population of the organisms with 
+# the best fitness from the given population
+def bestOfPopulation(start, operations, goal, population):
+	sortedPopulation =  sorted(population,key =lambda o: o.getFitness(start, operations, goal))
+	print map(lambda o: o.getFitness(start, operations, goal), sortedPopulation)
+
+	return sortedPopulation[0:2]
 
 class Organism:
 	"""An Organism represents an encoding of a solution within it's chromosome"""
@@ -67,9 +98,10 @@ class Organism:
 		Returns:
 			How close the organism is to the desired value once decoded.
 		"""
-		product = self.operate()
+
+		product = self.operate(base, ops)
 		difference = Functions.diff(product, goal)
-		fitness = difference + fitnessUtility(self.getLen)
+		fitness = difference + fitnessUtility(self.getLen())
 		return fitness
 
 	def mutate(self):
@@ -120,21 +152,6 @@ class Organism:
 			total = temp
 		return total
 
-def populate(initSize, numOps):
-	population = []
-	for i in xrange(initSize):
-		population.append(Organism(numOps))
-	return population
-
-def geneticSearch(base, operations, goal, max_exec):
-	"""
-	Returns:
-		[int, OperationStruct, int][] The solution path we took to solve,
-		int	Execution time,
-		int	Expanded node count,
-		int	Depth we went down to
-	"""
-	return ([[4, operations[0], 11]], 0.5, 5, 3)
 
 # print map(lambda o: o.getChromosome(), populate(10, len(operations)))
 # org = Organism(NUMOPS)
