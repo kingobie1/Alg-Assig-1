@@ -6,3 +6,5 @@
 .Ulysses-Group.plist
 
 Functions.pyc
+
+*.pyc
