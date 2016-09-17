@@ -120,22 +120,6 @@ class Organism:
 			total = temp
 		return total
 
-def populate(initSize, numOps):
-	population = []
-	for i in xrange(initSize):
-		population.append(Organism(numOps))
-	return population
-
-def geneticSearch(base, operations, goal, max_exec):
-	"""
-	Returns:
-		[int, OperationStruct, int][] The solution path we took to solve,
-		int	Execution time,
-		int	Expanded node count,
-		int	Depth we went down to
-	"""
-	return ([[4, operations[0], 11]], 0.5, 5, 3)
-
 # print map(lambda o: o.getChromosome(), populate(10, len(operations)))
 # org = Organism(NUMOPS)
 # print org.getChromosome()
