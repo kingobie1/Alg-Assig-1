@@ -12,7 +12,7 @@ as organisms that will be bred and selected fo rthat find optial solutions
 NUMOPS = 5
 INITIAL_ORGANISM_SIZE = 5
 INITIAL_POPULATION_SIZE = 10
-MUTATEPROB = 0.01
+MUTATEPROB = 0.11
 
 def geneticSearch(start, operations, goal, max_exec):
 	"""
@@ -36,34 +36,34 @@ def geneticSearch(start, operations, goal, max_exec):
 	# create initial population
 	population = populate(INITIAL_POPULATION_SIZE, len(operations))
 
-	# get the two fittest organims of out population
-	twoFittestOrganism = bestOfPopulation(start, operations, goal, population)
-	print 
-	print "two best organisms: "
-	print map(lambda o: o.getChromosome(), twoFittestOrganism)
-	print ".."
-	print "... crossing over ..."
-	print ".."
+	for x in xrange(1,10):
+		
+		# get the two fittest organims of out population
+		twoFittestOrganism = bestOfPopulation(start, operations, goal, population)
+		print 
+		print "two best organisms: "
+		print map(lambda o: o.getChromosome(), twoFittestOrganism)
+		print map(lambda o: o.operate(start, operations), twoFittestOrganism)
+		print ".."
+		print "... crossing over ..."
+		print ".."
 
-	# crossover the two fittest organisms
-	crossedOverOrganisms = []
-	organisms1, organisms2 = twoFittestOrganism[0].crossover(twoFittestOrganism[1])
-	crossedOverOrganisms.append(organisms1)
-	crossedOverOrganisms.append(organisms2)
-	print "two organisms created by crossover: "
-	print map(lambda o: o.getChromosome(), crossedOverOrganisms)
-	print
+		# crossover the two fittest organisms
+		crossedOverOrganisms = []
+		organisms1, organisms2 = twoFittestOrganism[0].crossover(twoFittestOrganism[1])
+		crossedOverOrganisms.append(organisms1)
+		crossedOverOrganisms.append(organisms2)
+		print "two organisms created by crossover: "
+		print map(lambda o: o.getChromosome(), crossedOverOrganisms)
+		print "Operation val: " + str(map(lambda o: o.operate(start, operations), crossedOverOrganisms))
+		print "Fitness val: " + str(map(lambda o: o.getFitness(start, operations, goal), crossedOverOrganisms))
+		print
 
 
-	# mutate the product of the crossover (2 organisms)
-	population = getMutatedPopulation(twoFittestOrganism, INITIAL_POPULATION_SIZE)
-	# print "mutated population: " + str(map(lambda o: o.getChromosome(), population))
-
-	# print "mutated organisms: " + str(map(lambda o: o.getChromosome(), population))
-
-	# TODO: population = the collection of mutated organisms
-
-	# while bestFitness != 0:
+		# mutate the product of the crossover (2 organisms)
+		# population = the collection of mutated organisms
+		population = getMutatedPopulation(twoFittestOrganism, INITIAL_POPULATION_SIZE)
+		# print "mutated population: " + str(map(lambda o: o.getChromosome(), population))
 
 	# print map(lambda o: o.getChromosome(), populate(10, len(operations)))
 	return ([[4, operations[0], 11]], 0.5, 5, 3)
@@ -169,9 +169,11 @@ class Organism:
 			op = random.randint(0, self.numOps-1)
 			self.chromosome.append(op)
 		elif mType == 2:
-			# We are removing genes
-			i = random.randint(0, len(self.chromosome)-1)
-			self.chromosome.pop(i)
+			# We are removing genes unless there is only one left
+			if len(self.chromosome) != 1:
+				i = random.randint(0, len(self.chromosome)-1)
+				self.chromosome.pop(i)
+
 		elif mType == 3:
 			# We are modigying a gene
 			i = random.randint(0, len(self.chromosome)-1)
