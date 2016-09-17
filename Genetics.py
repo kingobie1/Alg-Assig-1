@@ -11,6 +11,23 @@ as organisms that will be bred and selected fo rthat find optial solutions
 
 NUMOPS = 5
 
+def geneticSearch(start, operations, goal, max_exec):
+	"""
+	Returns:
+		[int, OperationStruct, int] The solution path we took to solve,
+		int	Execution time,
+		int	Expanded node count,
+		int	Depth we went down to
+	"""
+	print map(lambda o: o.getChromosome(), populate(10, len(operations)))
+	return ([[4, operations[0], 11]], 0.5, 5, 3)
+
+def populate(initSize, numOps):
+	population = []
+	for i in xrange(initSize):
+		population.append(Organism(numOps))
+	return population
+
 class Organism:
 	"""An Organism represents an encoding of a solution within it's chromosome"""
 
@@ -99,23 +116,6 @@ class Organism:
 			total = temp
 
 		return total
-
-def populate(initSize, numOps):
-	population = []
-	for i in xrange(initSize):
-		population.append(Organism(numOps))
-	return population
-
-def geneticSearch(start, operations, goal, max_exec):
-	"""
-	Returns:
-		[int, OperationStruct, int] The solution path we took to solve,
-		int	Execution time,
-		int	Expanded node count,
-		int	Depth we went down to
-	"""
-	print map(lambda o: o.getChromosome(), populate(10, len(operations)))
-	return ([[4, operations[0], 11]], 0.5, 5, 3)
 
 # org = Organism(NUMOPS)
 # print org.getChromosome()
