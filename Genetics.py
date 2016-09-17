@@ -27,8 +27,8 @@ def geneticSearch(start, operations, goal, max_exec):
 	populate
 
 	[repeat until found or time is up]
-		getFitness
-		crossover on best fitnesses
+		- getFitness -
+		- crossover on best fitnesses -
 		get collection of  crossed over organisms
 		mutate
 	"""
