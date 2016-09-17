@@ -38,13 +38,27 @@ def geneticSearch(start, operations, goal, max_exec):
 	# get the two fittest organims of out population
 	twoFittestOrganism = bestOfPopulation(start, operations, goal, population)
 
+	print 
+	print "two best organisms: "
+	print map(lambda o: o.getChromosome(), twoFittestOrganism)
+	print ".."
+	print "... crossing over ..."
+	print ".."
+
 	# TODO: crossover the two fittest organisms
+	crossedOverOrganisms = []
+	organisms1, organisms2 = twoFittestOrganism[0].crossover(twoFittestOrganism[1])
+	crossedOverOrganisms.append(organisms1)
+	crossedOverOrganisms.append(organisms2)
+
+	print "two organisms created by crossover: "
+	print map(lambda o: o.getChromosome(), crossedOverOrganisms)
+	print
+
 
 	# TODO: mutate the product of the crossover (2 organisms)
 
 	# TODO: population = the collection of mutated organisms
-
-	print "doing my best"
 
 	# while bestFitness != 0:
 
@@ -67,8 +81,6 @@ def fitnessUtility(lengthOfOrganism):
 # the best fitness from the given population
 def bestOfPopulation(start, operations, goal, population):
 	sortedPopulation =  sorted(population,key =lambda o: o.getFitness(start, operations, goal))
-	print map(lambda o: o.getFitness(start, operations, goal), sortedPopulation)
-
 	return sortedPopulation[0:2]
 
 class Organism:
@@ -136,9 +148,21 @@ class Organism:
 			secondary = self.getChromosome()
 
 		cuttingPoint = random.randint(0, len(primary) - 1)
+		print cuttingPoint
 
-		newOrganismGene1 = primary[0:cuttingPoint].extend(secondary[cuttingPoint:(len(secondary) - 1)])
-		newOrganismGene2 = secondary[0:cuttingPoint].extend(primary[cuttingPoint:(len(primary) - 1)])
+		sectionA1 = primary[0:cuttingPoint]
+		sectionA2 = secondary[cuttingPoint:(len(secondary))]
+		sectionB1 = secondary[0:cuttingPoint]
+		sectionB2 = primary[cuttingPoint:(len(primary))]
+
+		# newOrganismGene1 = sectionA1.extend(sectionA2)
+		# newOrganismGene2 = sectionB1.extend(sectionB2)
+
+		newOrganismGene1 = sectionA1 +sectionA2
+		newOrganismGene2 = sectionB1 + sectionB2
+
+		# newOrganismGene1 = primary[0:cuttingPoint].extend(secondary[cuttingPoint:(len(secondary) - 1)])
+		# newOrganismGene2 = secondary[0:cuttingPoint].extend(primary[cuttingPoint:(len(primary) - 1)])
 
 		return (Organism(self.numOps, geneSeq=newOrganismGene1), Organism(self.numOps, geneSeq=newOrganismGene2))
 
