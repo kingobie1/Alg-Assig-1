@@ -9,6 +9,7 @@ and greedy seach functions.
 """
 # import the actual functions from Functions.py:
 import Functions
+import Genetics
 from collections import namedtuple
 import sys
 
@@ -57,9 +58,9 @@ if method == "iterative":
     print "running iterative"
     path, elapsed, numExpanded, maxDepth = Functions.iterativeDeepening(int(base), ArrayOfOperations, int(target), float(time))
     path = path[::-1]
-elif method == "genetic"
+elif method == "genetic":
     print "running genetic"
-    
+    path, elapsed, numExpanded, maxDepth = Genetics.geneticSearch(base, ArrayOfOperations, target, time)
 else:
     print "running greedy"
     path, elapsed, numExpanded, maxDepth = Functions.greedySearch(int(base), ArrayOfOperations, int(target), float(time))

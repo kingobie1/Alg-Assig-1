@@ -30,6 +30,11 @@ def max_time(seconds):
 #This our function for doing an Iterative Depth First Search
 #(inspired by https://en.wikipedia.org/wiki/Iterative_deepening_depth-first_search)
 def iterativeDeepening(start, operations, goal, max_exec):
+	""" @return the solution path we took to solve,
+				execution time,
+				expanded node count,
+				depth we went down to
+	"""
 	depth = 0
 	solution = []
 	best = None

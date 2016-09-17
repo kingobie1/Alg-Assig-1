@@ -1,5 +1,6 @@
 import numpy as np
 import random
+import Functions
 """
 Obatola Seward-Evans, Dimitar Vouldjef, Frank Egan, Himanjal Sharma
 CS 4341
@@ -7,8 +8,6 @@ CS 4341
 This file contains functions and classes used for encoding problems
 as organisms that will be bred and selected fo rthat find optial solutions
 """
-# import the actual functions from Functions.py:
-import Functions
 
 NUMOPS = 5
 
@@ -34,6 +33,21 @@ class Organism:
 
 	def getLen(self):
 		return len(self.chromosome)
+
+	def getFitness(self, base, ops, goal):
+		"""Defines the organisms fitness given the operations and starting base number.
+
+		Args:
+			base (float): The starting number we read.
+			ops (OperationStruct[]): An array of operations we read form config file.
+			goal (float): The desired goal of base after operations.
+
+		Returns:
+			How close the organism is to the desired value once decoded.
+		"""
+		# Todo: need to penalize for chromosome length
+		total = self.operate()
+		return Functions.diff(total, goal)
 
 	def mutate(self):
 		mType = random.randint(1, 3)
@@ -67,27 +81,52 @@ class Organism:
 
 		return (Organism(self.numOps, geneSeq=newOrganismGene1), Organism(self.numOps, geneSeq=newOrganismGene2))
 
-	def operate(self, start):
+	def operate(self, start, ops):
+		""" 
+		Goes through each encoded operation in the chromosome and applies that to the base.
+
+		Args:
+			start (int): The base number form our config file.
+			ops (OperationStruct[]): An array of operations we read from config file.
+		"""
 		total = start
 
-		for index in self.gene:
-			# Todo: listOfOperations requires a masterlist of all possible operations.
-			operation = listOfOperations[index]
+		for index in self.chromosome:
+			
+			operation = None
+			[index]
 			temp = Functions.operateOn(total, operation)
 			total = temp
 
 		return total
 
-org = Organism(NUMOPS)
-print org.getChromosome()
-org.mutate()
-print org.getChromosome()
+def populate(initSize, numOps):
+	population = []
+	for i in xrange(initSize):
+		population.append(Organism(numOps))
+	return population
 
-org = Organism(numOps=NUMOPS)
-org2 = Organism(numOps=NUMOPS)
-print org.getChromosome()
-print org2.getChromosome()
+def geneticSearch(start, operations, goal, max_exec):
+	"""
+	Returns:
+		[int, OperationStruct, int] The solution path we took to solve,
+		int	Execution time,
+		int	Expanded node count,
+		int	Depth we went down to
+	"""
+	print map(lambda o: o.getChromosome(), populate(10, len(operations)))
+	return ([[4, operations[0], 11]], 0.5, 5, 3)
 
-new1, new2 = org.crossover(org2)
-print new1.getChromosome()
-print new2.getChromosome()
+# org = Organism(NUMOPS)
+# print org.getChromosome()
+# org.mutate()
+# print org.getChromosome()
+
+# org = Organism(numOps=len(operations))
+# org2 = Organism(numOps=len(operations))
+# print org.getChromosome()
+# print org2.getChromosome()
+
+# new1, new2 = org.crossover(org2)
+# print new1.getChromosome()
+# print new2.getChromosome()
