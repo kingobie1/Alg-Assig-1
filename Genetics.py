@@ -10,6 +10,7 @@ as organisms that will be bred and selected fo rthat find optial solutions
 """
 
 NUMOPS = 5
+INITIAL_ORGANISM_SIZE = 5
 
 def geneticSearch(start, operations, goal, max_exec):
 	"""
@@ -28,20 +29,25 @@ def populate(initSize, numOps):
 		population.append(Organism(numOps))
 	return population
 
+# Utility function for fitness
+def fitnessUtility(lengthOfOrganism):
+	# penalize longer organisms
+	return lengthOfOrganism * 0.1
+
 class Organism:
 	"""An Organism represents an encoding of a solution within it's chromosome"""
 
-	#This is an encoding for the solution into an organism
-	#each number is an index into the operators we read in.
+	# This is an encoding for the solution into an organism
+	# each number is an index into the operators we read in.
 	chromosome = []
-	#The number of operators that we read in, it's used to
+	# The number of operators that we read in, it's used to
 	# encode and mutate organisms
 	numOps = 0
 
 	def __init__(self, numOps, geneSeq=None):
 		self.numOps = numOps
 		if geneSeq == None:
-			self.chromosome = np.random.randint(5, size=10).tolist()
+			self.chromosome = np.random.randint(numOps, size=INITIAL_ORGANISM_SIZE).tolist()
 		else:
 			self.chromosome = geneSeq
 		
@@ -62,9 +68,10 @@ class Organism:
 		Returns:
 			How close the organism is to the desired value once decoded.
 		"""
-		# Todo: need to penalize for chromosome length
-		total = self.operate()
-		return Functions.diff(total, goal)
+		product = self.operate()
+		difference = Functions.diff(product, goal)
+		fitness = difference + fitnessUtility(self.getLen)
+		return fitness
 
 	def mutate(self):
 		mType = random.randint(1, 3)
