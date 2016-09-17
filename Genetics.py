@@ -12,6 +12,7 @@ as organisms that will be bred and selected fo rthat find optial solutions
 NUMOPS = 5
 INITIAL_ORGANISM_SIZE = 5
 INITIAL_POPULATION_SIZE = 10
+MUTATEPROB = 0.25
 
 def geneticSearch(start, operations, goal, max_exec):
 	"""
@@ -37,17 +38,18 @@ def geneticSearch(start, operations, goal, max_exec):
 
 	# get the two fittest organims of out population
 	twoFittestOrganism = bestOfPopulation(start, operations, goal, population)
-
+	print "TWO_FITTEST " + str(map(lambda o: o.getFitness(start, operations, goal), twoFittestOrganism))
 	# TODO: crossover the two fittest organisms
 
 	# TODO: mutate the product of the crossover (2 organisms)
+	map(lambda o: o.mutate(MUTATEPROB), twoFittestOrganism)
+	print "TWO_FITTEST " + str(map(lambda o: o.getFitness(start, operations, goal), twoFittestOrganism))
 
 	# TODO: population = the collection of mutated organisms
 
 	print "doing my best"
 
 	# while bestFitness != 0:
-
 
 	# print map(lambda o: o.getChromosome(), populate(10, len(operations)))
 	return ([[4, operations[0], 11]], 0.5, 5, 3)
@@ -67,8 +69,6 @@ def fitnessUtility(lengthOfOrganism):
 # the best fitness from the given population
 def bestOfPopulation(start, operations, goal, population):
 	sortedPopulation =  sorted(population,key =lambda o: o.getFitness(start, operations, goal))
-	print map(lambda o: o.getFitness(start, operations, goal), sortedPopulation)
-
 	return sortedPopulation[0:2]
 
 class Organism:
@@ -84,7 +84,7 @@ class Organism:
 	def __init__(self, numOps, geneSeq=None):
 		self.numOps = numOps
 		if geneSeq == None:
-			self.chromosome = np.random.randint(numOps, size=INITIAL_ORGANISM_SIZE).tolist()
+			self.chromosome = np.random.randint(low=0, high=numOps-1, size=INITIAL_ORGANISM_SIZE).tolist()
 		else:
 			self.chromosome = geneSeq
 		
@@ -110,11 +110,21 @@ class Organism:
 		fitness = difference + fitnessUtility(self.getLen())
 		return fitness
 
-	def mutate(self):
+	def mutate(self, prob=1):
+		"""
+		Mutates the organism either by adding, subtracting or modifyinh a gene.
+
+		Args:
+			prob (float): The probability that we will actually mutate. Values of 1 is certain 0 is never.
+		"""
+		#Should we mutate?
+		if random.random() < prob:
+			return 
+		#Do mutation
 		mType = random.randint(1, 3)
 		if mType == 1:
 			#We are adding a gene as an encoded index
-			op = random.randint(0, self.numOps)
+			op = random.randint(0, self.numOps-1)
 			self.chromosome.append(op)
 		elif mType == 2:
 			#We are removing genes
@@ -122,8 +132,8 @@ class Organism:
 			self.chromosome.pop(i)
 		elif mType == 3:
 			#We are modigying a gene
-			i = random.randint(1, len(self.chromosome))
-			self.chromosome[i] = random.randint(1, self.numOps)
+			i = random.randint(0, len(self.chromosome)-1)
+			self.chromosome[i] = random.randint(0, self.numOps-1)
 
 	def crossover(self, otherOrganism):
 		primary = None
@@ -151,8 +161,9 @@ class Organism:
 			ops (OperationStruct[]): An array of operations we read from config file.
 		"""
 		total = base
-
 		for index in self.chromosome:
+			if index >= len(ops):
+				print "EVIL_INDEX " + str(index)
 			op = ops[index]
 			temp = Functions.operateOn(total, op)
 			total = temp
