@@ -81,12 +81,10 @@ def populate(initSize, numOps):
 		population.append(Organism(numOps))
 	return population
 
-
 # Utility function for fitness
 def fitnessUtility(lengthOfOrganism):
 	# penalize longer organisms
-	return lengthOfOrganism * 0.1
-
+	return lengthOfOrganism * 0.2
 
 # function that returns a new population of the organisms with 
 # the best fitness from the given population
