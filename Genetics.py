@@ -18,15 +18,12 @@ MUTATEPROB = 0.99
 FITNESS_THRESHOLD = 2.0
 
 
+# Returns:
+# 	[int, OperationStruct, int] The solution path we took to solve,
+# 	int	Execution time,
+# 	int	Expanded node count,
+# 	int	Depth we went down to
 def geneticSearch(start, operations, goal, max_exec):
-	"""
-	Returns:
-		[int, OperationStruct, int] The solution path we took to solve,
-		int	Execution time,
-		int	Expanded node count,
-		int	Depth we went down to
-	"""
-
 	"""
 	populate
 
@@ -41,35 +38,42 @@ def geneticSearch(start, operations, goal, max_exec):
 	population = populate(INITIAL_POPULATION_SIZE, len(operations))
 	twoFittestOrganism = bestOfPopulation(start, operations, goal, population)
 
+
+	bestFitness1 = map(lambda o: o.getFitness(start, operations, goal), twoFittestOrganism)[0]
+	bestFitness2 = map(lambda o: o.getFitness(start, operations, goal), twoFittestOrganism)[1]
+
 	# Repeat until gett fitness under 10.0
-	while map(lambda o: o.getFitness(start, operations, goal), twoFittestOrganism)[0] > FITNESS_THRESHOLD or map(lambda o: o.getFitness(start, operations, goal), twoFittestOrganism)[1] > FITNESS_THRESHOLD:
+	while bestFitness1 > FITNESS_THRESHOLD:
 	# for x in xrange(1,10):
 		
 		# get the two fittest organims of out population
 		twoFittestOrganism = bestOfPopulation(start, operations, goal, population)
-		print 
-		print "two best organisms: "
-		print map(lambda o: o.getChromosome(), twoFittestOrganism)
-		print "Operation val: " + str(map(lambda o: o.operate(start, operations), twoFittestOrganism))
-		print "Fitness val: " + str(map(lambda o: o.getFitness(start, operations, goal), twoFittestOrganism))
-		print ".."
-		print "... crossing over ..."
+		# print 
+		# print "two best organisms: "
+		# print map(lambda o: o.getChromosome(), twoFittestOrganism)
+		# print "Operation val: " + str(map(lambda o: o.operate(start, operations), twoFittestOrganism))
+		# print "Fitness val: " + str(map(lambda o: o.getFitness(start, operations, goal), twoFittestOrganism))
+		# print ".."
+		# print "... crossing over ..."
 
 		# crossover the two fittest organisms
 		crossedOverOrganisms = []
 		organisms1, organisms2 = twoFittestOrganism[0].crossover(twoFittestOrganism[1])
 		crossedOverOrganisms.append(organisms1)
 		crossedOverOrganisms.append(organisms2)
-		print "two organisms created by crossover: "
-		print map(lambda o: o.getChromosome(), crossedOverOrganisms)
-		print "Operation val: " + str(map(lambda o: o.operate(start, operations), crossedOverOrganisms))
+		# print "two organisms created by crossover: "
+		# print map(lambda o: o.getChromosome(), crossedOverOrganisms)
+		# print "Operation val: " + str(map(lambda o: o.operate(start, operations), crossedOverOrganisms))
 		print "Fitness val: " + str(map(lambda o: o.getFitness(start, operations, goal), crossedOverOrganisms))
-		print
+		# print
 
 
 		# mutate the product of the crossover (2 organisms)
 		# population = the collection of mutated organisms
 		population = getMutatedPopulation(crossedOverOrganisms, INITIAL_POPULATION_SIZE)
+
+		bestFitness1 = map(lambda o: o.getFitness(start, operations, goal), twoFittestOrganism)[0]
+		bestFitness2 = map(lambda o: o.getFitness(start, operations, goal), twoFittestOrganism)[1]
 
 	# TODO: give correct return
 	return ([[4, operations[0], 11]], 0.5, 5, 3)
