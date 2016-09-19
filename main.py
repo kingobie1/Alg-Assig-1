@@ -42,16 +42,16 @@ with open(fileName) as file:
     target = file.readline().strip()
     time = file.readline().strip()
 
-    print "method:" + method
-    print "base:" + base
-    print "target:" + target
-    print "time:" + time
+    # print "method:" + method
+    # print "base:" + base
+    # print "target:" + target
+    # print "time:" + time
 
     for line in file:
         arrayLength += 1
         # gets the operator and number (any number of digits) from the line
         # creates an OperationStruct from it and adds it to ArrayOfOperations
-    	ArrayOfOperations.append(OperationStruct(operator = line[0], value = int(line.split()[1])))
+    	ArrayOfOperations.append(OperationStruct(operator = line[0], value = float(line.split()[1])))
     # print ArrayOfOperations
 
 if method == "iterative":

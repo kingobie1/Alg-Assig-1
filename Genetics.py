@@ -8,32 +8,32 @@ Obatola Seward-Evans, Dimitar Vouldjef, Frank Egan, Himanjal Sharma
 CS 4341
 
 This file contains functions and classes used for encoding problems
-as organisms that will be bred and selected fo rthat find optial solutions
+as organisms that will be bred and selected for that find optial solutions
 """
 
 NUMOPS = 5
 INITIAL_ORGANISM_SIZE = 5
-INITIAL_POPULATION_SIZE = 3
+INITIAL_POPULATION_SIZE = 5
 KEEP_BEST = 1
 CROSSOVER_BEST = 2
+LENGTH_PENALTY = 0.2
 
 # amount we want the program to stop at
-FITNESS_THRESHOLD = 1.0
+FITNESS_THRESHOLD = 0
 
-# Returns:
-# 	[int, OperationStruct, int] The solution path we took to solve,
-# 	int	Execution time,
-# 	int	Expanded node count,
-# 	int	Depth we went down to
 def geneticSearch(start, operations, goal, max_exec):
 	"""
-	populate
-
-	[repeat until found or time is up]
+	Repeats until found or time is up
 		- getFitness -
 		- crossover on best fitnesses -
 		get collection of  crossed over organisms
 		mutate
+
+	Returns:
+		error (int): The amount our final answer is off by.
+		size (int): Size of our best organism.
+		population (int): Size of our final population.
+		gens (int): The number of generation it took solve the problem.
 	"""
 
 	# create initial population
@@ -48,7 +48,7 @@ def geneticSearch(start, operations, goal, max_exec):
 		with Functions.max_time(max_exec):
 
 			# Repeat until gett fitness under 10.0
-			while best.getFitness(start, operations, goal) > FITNESS_THRESHOLD and count < 100:
+			while best.getFitness(start, operations, goal) > FITNESS_THRESHOLD: #and count < MAX_DEPTH:
 
 				newPopulation = copy.deepcopy(population[0:KEEP_BEST])
 
@@ -60,19 +60,20 @@ def geneticSearch(start, operations, goal, max_exec):
 					newPopulation.append(organism2)
 
 				population = sortPopulation(newPopulation, start, operations, goal)
+				print "Population = " + str(population)
 				best = population[0]
 
 				count += 1
 
 			# TODO: give correct return
-			return ([[4, operations[0], 11]], 0.5, 5, 3)
+			return (best.toPath(start, operations), (time.time() - init_time), len(population), count)
 
 	except Functions.TimeoutException:
-		return [[4, operations[0], 11]], (time.time() - init_time), count * len(operations), count
+		return (best.toPath(start, operations), (time.time() - init_time), len(population), count)
 
 
 def sortPopulation(population, start, operations, goal):
-	return sorted(population,key =lambda o: o.getFitness(start, operations, goal))
+	return sorted(population, key=lambda o: o.getFitness(start, operations, goal))
 
 def populate(initSize, numOps):
 	population = []
@@ -83,7 +84,7 @@ def populate(initSize, numOps):
 # Utility function for fitness
 def fitnessUtility(lengthOfOrganism):
 	# penalize longer organisms
-	return lengthOfOrganism * 0.2
+	return lengthOfOrganism * LENGTH_PENALTY
 
 
 class Organism:
@@ -189,13 +190,31 @@ class Organism:
 
 		total = base
 		for index in self.chromosome:
-			if index >= len(ops):
-				print "EVIL_INDEX " + str(index)
 			op = ops[index]
 			temp = Functions.operateOn(total, op)
 			total = temp
 		return total
 
+	def toPath(self, base, ops):
+		""" 
+		Creates a matrix where each row is the base for that operation,
+			the operation applied to it and the product of that operation.
+		Args:
+			base (float): Starting point form input file.
+			ops (OperationStruct[]): The operations available to us.
+
+		Return: 
+			[[float, OperationStruct, float]]
+		"""
+		path = []
+		#Iterate through chromosome and apply operation
+		for i in self.chromosome:
+			#This loop's operation
+			op = ops[i]
+			nextBase = Functions.operateOn(base, op)
+			path.append([base, op, nextBase])
+			base = nextBase
+		return path
 
 
 

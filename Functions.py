@@ -65,15 +65,15 @@ def expanded_nodes(depth, ops):
 
 def operateOn(start, operation):
 	if operation.operator == "+":
-		return int(start + operation.value)
+		return start + operation.value
 	elif operation.operator == "-":
-		return int(start - operation.value)
+		return start - operation.value
 	elif operation.operator == "*":
-		return int(start * operation.value)
+		return start * operation.value
 	elif operation.operator == "/":
-		return int(start / operation.value)
+		return start / operation.value
 	elif operation.operator == "^":
-		return int(start ** operation.value)
+		return start ** operation.value
 
 def depthLimited(start, operations, goal, depth):
 	if depth == 0:
