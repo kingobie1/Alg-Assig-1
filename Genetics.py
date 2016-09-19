@@ -12,11 +12,12 @@ as organisms that will be bred and selected for that find optial solutions
 """
 
 NUMOPS = 5
-INITIAL_ORGANISM_SIZE = 5
-INITIAL_POPULATION_SIZE = 5
+INITIAL_ORGANISM_SIZE = 10
+INITIAL_POPULATION_SIZE = 25
 KEEP_BEST = 1
-CROSSOVER_BEST = 2
+CROSSOVER_BEST = 24
 LENGTH_PENALTY = 0.2
+PROB = 0.9
 RIDICULOUS_HUGE_ERROR = 10000000
 
 # amount we want the program to stop at
@@ -143,6 +144,8 @@ class Organism:
 	# Args:
 	# 	prob (float): The probability that we will actually mutate. Values of 1 is certain 0 is never.
 	def mutate(self):
+		if random.random() > PROB:
+			return
 
 		# Do mutation
 		mType = random.randint(1, 3)
