@@ -8,7 +8,7 @@ Obatola Seward-Evans, Dimitar Vouldjef, Frank Egan, Himanjal Sharma
 CS 4341
 
 This file contains functions and classes used for encoding problems
-as organisms that will be bred and selected fo rthat find optial solutions
+as organisms that will be bred and selected for that find optial solutions
 """
 
 NUMOPS = 5
@@ -16,7 +16,7 @@ INITIAL_ORGANISM_SIZE = 5
 INITIAL_POPULATION_SIZE = 5
 KEEP_BEST = 1
 CROSSOVER_BEST = 2
-MAX_DEPTH = 10000
+LENGTH_PENALTY = 0.2
 
 # amount we want the program to stop at
 FITNESS_THRESHOLD = 0
@@ -84,7 +84,7 @@ def populate(initSize, numOps):
 # Utility function for fitness
 def fitnessUtility(lengthOfOrganism):
 	# penalize longer organisms
-	return lengthOfOrganism * 0.2
+	return lengthOfOrganism * LENGTH_PENALTY
 
 
 class Organism:
