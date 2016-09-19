@@ -1,6 +1,8 @@
 import numpy as np
 import random
 import Functions
+import time
+import copy
 """
 Obatola Seward-Evans, Dimitar Vouldjef, Frank Egan, Himanjal Sharma
 CS 4341
@@ -11,22 +13,19 @@ as organisms that will be bred and selected fo rthat find optial solutions
 
 NUMOPS = 5
 INITIAL_ORGANISM_SIZE = 5
-INITIAL_POPULATION_SIZE = 10
-MUTATEPROB = 0.99
+INITIAL_POPULATION_SIZE = 3
+KEEP_BEST = 1
+CROSSOVER_BEST = 2
 
 # amount we want the program to stop at
-FITNESS_THRESHOLD = 2.0
+FITNESS_THRESHOLD = 1.0
 
-
+# Returns:
+# 	[int, OperationStruct, int] The solution path we took to solve,
+# 	int	Execution time,
+# 	int	Expanded node count,
+# 	int	Depth we went down to
 def geneticSearch(start, operations, goal, max_exec):
-	"""
-	Returns:
-		[int, OperationStruct, int] The solution path we took to solve,
-		int	Execution time,
-		int	Expanded node count,
-		int	Depth we went down to
-	"""
-
 	"""
 	populate
 
@@ -39,41 +38,41 @@ def geneticSearch(start, operations, goal, max_exec):
 
 	# create initial population
 	population = populate(INITIAL_POPULATION_SIZE, len(operations))
-	twoFittestOrganism = bestOfPopulation(start, operations, goal, population)
+	count = 0
 
-	# Repeat until gett fitness under 10.0
-	while map(lambda o: o.getFitness(start, operations, goal), twoFittestOrganism)[0] > FITNESS_THRESHOLD or map(lambda o: o.getFitness(start, operations, goal), twoFittestOrganism)[1] > FITNESS_THRESHOLD:
-	# for x in xrange(1,10):
-		
-		# get the two fittest organims of out population
-		twoFittestOrganism = bestOfPopulation(start, operations, goal, population)
-		print 
-		print "two best organisms: "
-		print map(lambda o: o.getChromosome(), twoFittestOrganism)
-		print "Operation val: " + str(map(lambda o: o.operate(start, operations), twoFittestOrganism))
-		print "Fitness val: " + str(map(lambda o: o.getFitness(start, operations, goal), twoFittestOrganism))
-		print ".."
-		print "... crossing over ..."
+	population = sortPopulation(population, start, operations, goal)
+	best = population[0]
 
-		# crossover the two fittest organisms
-		crossedOverOrganisms = []
-		organisms1, organisms2 = twoFittestOrganism[0].crossover(twoFittestOrganism[1])
-		crossedOverOrganisms.append(organisms1)
-		crossedOverOrganisms.append(organisms2)
-		print "two organisms created by crossover: "
-		print map(lambda o: o.getChromosome(), crossedOverOrganisms)
-		print "Operation val: " + str(map(lambda o: o.operate(start, operations), crossedOverOrganisms))
-		print "Fitness val: " + str(map(lambda o: o.getFitness(start, operations, goal), crossedOverOrganisms))
-		print
+	init_time = time.time()
+	try:
+		with Functions.max_time(max_exec):
+
+			# Repeat until gett fitness under 10.0
+			while best.getFitness(start, operations, goal) > FITNESS_THRESHOLD and count < 100:
+
+				newPopulation = copy.deepcopy(population[0:KEEP_BEST])
+
+				for i in range(CROSSOVER_BEST - 1):
+					organism1, organism2 = population[i].crossover(population[i + 1])
+					organism1.mutate()
+					organism2.mutate()
+					newPopulation.append(organism1)
+					newPopulation.append(organism2)
+
+				population = sortPopulation(newPopulation, start, operations, goal)
+				best = population[0]
+
+				count += 1
+
+			# TODO: give correct return
+			return ([[4, operations[0], 11]], 0.5, 5, 3)
+
+	except Functions.TimeoutException:
+		return [[4, operations[0], 11]], (time.time() - init_time), count * len(operations), count
 
 
-		# mutate the product of the crossover (2 organisms)
-		# population = the collection of mutated organisms
-		population = getMutatedPopulation(crossedOverOrganisms, INITIAL_POPULATION_SIZE)
-
-	# TODO: give correct return
-	return ([[4, operations[0], 11]], 0.5, 5, 3)
-
+def sortPopulation(population, start, operations, goal):
+	return sorted(population,key =lambda o: o.getFitness(start, operations, goal))
 
 def populate(initSize, numOps):
 	population = []
@@ -85,48 +84,6 @@ def populate(initSize, numOps):
 def fitnessUtility(lengthOfOrganism):
 	# penalize longer organisms
 	return lengthOfOrganism * 0.2
-
-# function that returns a new population of the organisms with 
-# the best fitness from the given population
-def bestOfPopulation(start, operations, goal, population):
-	sortedPopulation =  sorted(population,key =lambda o: o.getFitness(start, operations, goal))
-	# i = 0
-
-	# # ensure that we don't get the same organisms as the best
-	# if len(sortedPopulation) > 3:
-	# 	while sortedPopulation[0].getFitness(start, operations, goal) == sortedPopulation[i].getFitness(start, operations, goal) or i < 2:
-	# 		i += 1
-
-	# 	bestOF = []
-	# 	bestOF.append(sortedPopulation[0])
-	# 	bestOF.append(sortedPopulation[i])
-
-	# 	return bestOF
-
-	if sortedPopulation[0].getFitness(start, operations, goal) == sortedPopulation[1].getFitness(start, operations, goal) and len(sortedPopulation) > 2:
-		bestOF = []
-		bestOF.append(sortedPopulation[0])
-		bestOF.append(sortedPopulation[2])
-		return bestOF
-
-	return sortedPopulation[0:2]
-	# return bestOF
-
-
-# returns a new population of mutated organisms
-def getMutatedPopulation(twoFittestOrganism, populationSize):
-	mutatedPopulation = []
-
-	# create population of size, populationSize
-	for x in xrange(0, populationSize / 2):
-		mutatedPopulation.extend(twoFittestOrganism)
-
-	# mutate each organism in population
-	for organism in mutatedPopulation:
-		organism.mutate(MUTATEPROB)
-		# print organism.getChromosome()
-
-	return mutatedPopulation
 
 
 class Organism:
@@ -145,6 +102,9 @@ class Organism:
 			self.chromosome = np.random.randint(low=0, high=numOps-1, size=INITIAL_ORGANISM_SIZE).tolist()
 		else:
 			self.chromosome = geneSeq
+
+	def __repr__(self):
+		return str(self.chromosome)
 		
 	def getChromosome(self):
 		return self.chromosome
@@ -176,10 +136,7 @@ class Organism:
 	# Mutates the organism either by adding, subtracting or modifyinh a gene.
 	# Args:
 	# 	prob (float): The probability that we will actually mutate. Values of 1 is certain 0 is never.
-	def mutate(self, prob=1):
-		# Should we mutate?
-		if random.random() < prob:
-			return 
+	def mutate(self):
 
 		# Do mutation
 		mType = random.randint(1, 3)
@@ -210,8 +167,8 @@ class Organism:
 			secondary = self.getChromosome()
 
 		cuttingPoint = random.randint(0, len(primary) - 1)
-		print "... cutting point: " + str(cuttingPoint)
-		print ".."
+		#print "... cutting point: " + str(cuttingPoint)
+		#print ".."
 
 		sectionA1 = primary[0:cuttingPoint]
 		sectionA2 = secondary[cuttingPoint:(len(secondary))]
