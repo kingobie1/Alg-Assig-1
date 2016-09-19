@@ -17,6 +17,7 @@ INITIAL_POPULATION_SIZE = 5
 KEEP_BEST = 1
 CROSSOVER_BEST = 2
 LENGTH_PENALTY = 0.2
+RIDICULOUS_HUGE_ERROR = 10000000
 
 # amount we want the program to stop at
 FITNESS_THRESHOLD = 0
@@ -122,7 +123,11 @@ class Organism:
 	# 	How close the organism is to the desired value once decoded.
 	def getFitness(self, base, ops, goal):
 
-		product = self.operate(base, ops)
+		try:
+			product = self.operate(base, ops)
+		except ValueError:
+			product = RIDICULOUS_HUGE_ERROR
+			
 		difference = Functions.diff(product, goal)
 		fitness = difference + fitnessUtility(self.getLen())
 		return fitness
